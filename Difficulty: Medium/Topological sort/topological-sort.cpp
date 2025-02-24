@@ -5,57 +5,49 @@ using namespace std;
 
 // } Driver Code Ends
 
-#include <vector>
-#include <queue>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 class Solution {
 public:
+    int V;
+    
     // Function to return list containing vertices in Topological order.
+    void usingDFS(vector<vector<int>>& adj, int u, vector<bool>& visited, stack<int>& st) {
+        visited[u] = true;
+
+        for (int &v : adj[u]) {
+            if (!visited[v]) {
+                usingDFS(adj, v, visited, st);  // Recursive call
+            }
+        }
+
+        st.push(u); // Push current node after visiting all children
+    }
+
     vector<int> topologicalSort(vector<vector<int>>& adj) {
-        int V = adj.size();
-        vector<int> inDegree(V, 0);
+        V = adj.size();  // Set number of vertices
+        vector<bool> visited(V, false);
+        stack<int> st;
         vector<int> result;
 
-        // Calculate in-degrees of all vertices
-        for (int u = 0; u < V; ++u) {
-            for (int v : adj[u]) {
-                inDegree[v]++;
+        // Perform DFS for each unvisited node
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                usingDFS(adj, i, visited, st);
             }
         }
 
-        // Queue to hold vertices with in-degree 0
-        queue<int> q;
-        for (int u = 0; u < V; ++u) {
-            if (inDegree[u] == 0) {
-                q.push(u);
-            }
+        // Pop elements from stack to form topological order
+        while (!st.empty()) {
+            result.push_back(st.top());
+            st.pop();
         }
 
-        // Process vertices with in-degree 0
-        while (!q.empty()) {
-            int u = q.front();
-            q.pop();
-            result.push_back(u);
-
-            // Reduce in-degree of adjacent vertices
-            for (int v : adj[u]) {
-                inDegree[v]--;
-                if (inDegree[v] == 0) {
-                    q.push(v);
-                }
-            }
-        }
-
-        // If the result contains all vertices, return it; otherwise, the graph has a cycle
-        if (result.size() == V) {
-            return result;
-        } else {
-            return {}; // Return an empty vector if the graph has a cycle
-        }
+        return result;
     }
 };
+
 
 //{ Driver Code Starts.
 
