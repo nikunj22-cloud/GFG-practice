@@ -4,39 +4,55 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 class Solution {
   public:
-   int V;
     // Function to detect cycle in a directed graph.
-     bool isCyclicDFS( vector<vector<int>>&adj , vector<bool>&visited , vector<bool>&recursion , int u ){
-         recursion[u] = true;
-         visited[u] = true;
-         
+    bool isCyclic(vector<vector<int>> &adj) {
+        // code here
+        //using bfs 
+        //same as kahns algo
+        int N = adj.size();
+      queue<int>q;
+      vector<int>indegree(N , 0);
+      int count = 0; //to keep track of node
+      
+      //step1  indegree find kro mtlb u se kha ja skte h mtlb v k pass kitne node 
+      for( int u = 0 ;  u<N ; u++){
+          for( int &v : adj[u]){
+              indegree[v]++;
+          }
+      }
+          //step2 indegree 0 h toh simply push kro then count ko b bdha do
+          for( int i =0 ; i<N; i++){
+          if(indegree[i] == 0){
+              q.push(i);
+          }
+        }
+        //step 3 simple bfs to found count 
+        while(!q.empty()){
+            int u = q.front();
+            q.pop();
+            count++;
+        
+          //ab q se pop krrhe h or pop kr rhe h toh indegre b ghtani pdegi
          for( int &v : adj[u]){
-             if( visited[v]==false && isCyclicDFS(adj , visited , recursion , v)){
-                 return true;
-             }
-             else if( visited[v]==true && recursion[v]==true){
-                 return true;
+             indegree[v]--;
+             if(indegree[v]==0){
+                 q.push(v);
              }
          }
-         recursion[u]=false;
-         return false;
-     }
-    bool isCyclic(vector<vector<int>> &adj) {
-         V = adj.size();
-        // code here
-        vector<bool>visited( V , false);
-        vector<bool>recursion(V , false);
-        
-        for( int i = 0 ; i< V ; i++){
-            if(!visited[i] && isCyclicDFS(adj , visited , recursion , i)){
-                return true;
-            }
         }
-        return false;
+         
+        
+      if(count == N){
+          return false;
+      }
+      return true;
+      
     }
 };
+
 
 //{ Driver Code Starts.
 
