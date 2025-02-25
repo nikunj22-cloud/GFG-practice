@@ -5,47 +5,52 @@ using namespace std;
 
 // } Driver Code Ends
 
-#include <bits/stdc++.h>
-using namespace std;
-
 class Solution {
-public:
-    int V;
-    
+  public:
     // Function to return list containing vertices in Topological order.
-    void usingDFS(vector<vector<int>>& adj, int u, vector<bool>& visited, stack<int>& st) {
-        visited[u] = true;
-
-        for (int &v : adj[u]) {
-            if (!visited[v]) {
-                usingDFS(adj, v, visited, st);  // Recursive call
-            }
-        }
-
-        st.push(u); // Push current node after visiting all children
-    }
-
     vector<int> topologicalSort(vector<vector<int>>& adj) {
-        V = adj.size();  // Set number of vertices
-        vector<bool> visited(V, false);
-        stack<int> st;
-        vector<int> result;
-
-        // Perform DFS for each unvisited node
-        for (int i = 0; i < V; i++) {
-            if (!visited[i]) {
-                usingDFS(adj, i, visited, st);
+        // Your code here 
+        //using bfs kahns algorithm
+        //first step -indegree nikalo
+        queue<int>q;
+        int N = adj.size();
+        vector<int>indegree(N , 0);
+        vector<int>result;
+        for( int u = 0 ; u<adj.size() ; u++){
+            for( auto  &v : adj[u]){
+                indegree[v]++; //indegree bdha di 
             }
         }
-
-        // Pop elements from stack to form topological order
-        while (!st.empty()) {
-            result.push_back(st.top());
-            st.pop();
+        //step2 find indegree and push in to the que
+        //which degree is 0
+        
+        for( int i = 0 ; i<adj.size() ; i++){
+            if(indegree[i]==0){
+                q.push(i);
+            }
         }
-
+        
+        //step3 perform bfs
+        
+        while(!q.empty()){
+            int u = q.front();
+            q.pop();
+            //bhai ab pop krliya h mtlb woh result h toh usko simply result m push kro
+            result.push_back(u);
+          
+        
+        //indegree bhi toh ghtani pdegi joh node unse judi hui h unki 
+        for( int &v : adj[u]){
+           indegree[v]--;
+            if( indegree[v]==0){
+            q.push(v);
+        }
+      }
+        
+      }
         return result;
     }
+    
 };
 
 
