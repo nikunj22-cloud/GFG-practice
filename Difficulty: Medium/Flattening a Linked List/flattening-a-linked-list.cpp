@@ -35,6 +35,7 @@ Node* createLinkedList(vector<Node*>& v) {
 
 
 // } Driver Code Ends
+
 /* Node structure  used in the program
 
 struct Node{
@@ -54,29 +55,31 @@ struct Node{
 class Solution {
   public:
     // Function which returns the  root of the flattened linked list.
-    Node *mergeTwoSortedList(Node *list1 , Node *list2){
+    Node *mergeTwolist( Node *list1 , Node *list2){
+        if(list1 == NULL)return list2;
+        if(list2 == NULL)return list1;
         
-        if(list1 == NULL) return list2;
-        if(list2 == NULL) return list1;
-        Node *result ;
-        if( list1->data > list2->data){
-            result = list2;
-            result->bottom =  mergeTwoSortedList(list1 , list2->bottom);
-            
+        Node *result;
+        if(list1->data < list2->data){ result =  list1;
+        result->bottom = mergeTwolist( list1->bottom , list2);
         }
         else{
-            result = list1;
-            result->bottom = mergeTwoSortedList(list1->bottom , list2);
+            result = list2;
+            result->bottom = mergeTwolist(list1 , list2->bottom);
         }
         return result;
     }
     Node *flatten(Node *root) {
         // Your code here
-        if(root ==  NULL)return NULL;
-       Node *root2 = flatten(root->next);
-        return mergeTwoSortedList(root , root2);
+        if(root==NULL)return NULL;
+        Node *root2 = flatten(root->next);
+        
+        
+        return mergeTwolist(root , root2);
     }
 };
+
+
 
 //{ Driver Code Starts.
 
