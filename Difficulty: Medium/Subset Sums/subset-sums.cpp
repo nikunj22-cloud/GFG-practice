@@ -26,6 +26,7 @@ class Solution {
         int idx;
         int n = arr.size();
         SubSet( arr , subset , 0 , 0 , n);
+        sort(subset.begin() , subset.end());
         return subset;
     }
 };
