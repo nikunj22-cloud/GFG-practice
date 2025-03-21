@@ -12,41 +12,40 @@ struct Node {
 
 // } Driver Code Ends
 
+/* A binary tree node
 
-#include <vector>
-using namespace std;
+struct Node
+{
+    int data;
+    struct Node* left;
+    struct Node* right;
 
-// Definition for a binary tree node.
-// struct Node {
-//     int data;
-//     Node* left;
-//     Node* right;
-//     Node(int val) : data(val), left(nullptr), right(nullptr) {}
-// };
-
-class Solution {
-public:
-    vector<int> leftView(Node* root) {
-        vector<int> result;
-        recursion(root, 0, result); // Call the recursive helper function
-        return result;
-    }
-
-private:
-    void recursion(Node* root, int level, vector<int>& result) {
-        if (root == nullptr) return; // Base case: if the node is null, return
-
-        // If the current level is equal to the size of the result vector,
-        // it means this is the first node at this level, so add it to the result.
-        if (level == result.size()) {
-            result.push_back(root->data);
-        }
-
-        // Recur for the left and right subtrees
-        recursion(root->left, level + 1, result);  // Traverse the left subtree
-        recursion(root->right, level + 1, result); // Traverse the right subtree
+    Node(int x){
+        data = x;
+        left = right = NULL;
     }
 };
+ */
+
+class Solution {
+  public:
+     void solve(Node *root , vector<int>& result , int level ){
+         if(root== NULL)return;
+         
+         if(level == result.size()){
+             result.push_back(root->data);
+         }
+         solve(root->left , result , level+1);
+         solve(root->right , result , level+1);
+     }
+    vector<int> leftView(Node *root) {
+        // code here
+        vector<int>result;
+        solve( root , result , 0);
+        return result;
+    }
+};
+
 
 //{ Driver Code Starts.
 
