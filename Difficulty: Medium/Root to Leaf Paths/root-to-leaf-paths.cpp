@@ -115,6 +115,7 @@ class Matrix {
 
 
 // } Driver Code Ends
+
 /*
 
 Definition for Binary Tree Node
@@ -133,28 +134,32 @@ struct Node
 
 class Solution {
   public:
-    void Paths( Node* root , vector<int>& currPath , vector<vector<int>>& currPaths){
+    void solve( Node*root , vector<int> &currPath , vector<vector<int>> &currPaths){
         if(root==NULL) return ;
-        currPath.push_back(root->data);
-        if(root->left == NULL &&  root->right==NULL){
-             currPaths.push_back(currPath);
-            
+            currPath.push_back(root->data);
+        
+        if(root->left == NULL && root->right == NULL){
+            currPaths.push_back(currPath);
         }
         else{
-            Paths(root->left , currPath , currPaths);
-            Paths(root->right , currPath , currPaths);
+            solve(root->left , currPath , currPaths);
+            solve(root->right , currPath , currPaths);
         }
         currPath.pop_back();
-        
     }
     vector<vector<int>> Paths(Node* root) {
         // code here
         vector<int>currPath;
         vector<vector<int>>currPaths;
-        Paths(root , currPath , currPaths);
+        
+        solve(root , currPath , currPaths);
+        
+        
+        
         return currPaths;
     }
 };
+
 
 
 //{ Driver Code Starts.
