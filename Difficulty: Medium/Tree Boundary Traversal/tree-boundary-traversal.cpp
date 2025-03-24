@@ -88,6 +88,7 @@ Node* buildTree(string str) {
 
 
 // } Driver Code Ends
+
 /*
 // Tree Node
 class Node {
@@ -104,70 +105,77 @@ class Node {
     }
 };
 */
-
 class Solution {
 public:
-    // Traverse the left boundary (excluding leaf nodes)
-    void traverseLeft(Node* root, vector<int>& ans) {
-        if (!root || (!root->left && !root->right)) {
-            return; // Stop at leaf nodes
-        }
-        ans.push_back(root->data); // Add current node to the result
-        if (root->left) {
-            traverseLeft(root->left, ans); // Traverse left subtree
-        } else {
-            traverseLeft(root->right, ans); // Traverse right subtree if left is null
+    vector<int> boundaryTraversal(Node *root) {
+        vector<int> result;
+        if (!root) return result; // Agar tree khali hai
+        
+        // Root ko add karo (except agar woh leaf na ho)
+        result.push_back(root->data);
+        
+        // Left boundary (except leaves)
+        addLeftBoundary(root->left, result);
+        
+        // Leaves (left aur right dono subtree se)
+        addLeaves(root->left, result);
+        addLeaves(root->right, result);
+        
+        // Right boundary (except leaves)
+        addRightBoundary(root->right, result);
+        
+        return result;
+    }
+    
+    // Left boundary ke nodes add karne ke liye
+    void addLeftBoundary(Node* root, vector<int>& result) {
+        Node* curr = root;
+        while (curr) {
+            // Agar leaf nahi hai toh add karo
+            if (!isLeaf(curr)) {
+                result.push_back(curr->data);
+            }
+            // Left mein jao, agar left nahi toh right
+            if (curr->left) curr = curr->left;
+            else curr = curr->right;
         }
     }
-
-    // Traverse all leaf nodes
-    void traverseLeaf(Node* root, vector<int>& ans) {
-        if (!root) {
-            return; // Base case
+    
+    // Right boundary ke nodes add karne ke liye
+    void addRightBoundary(Node* root, vector<int>& result) {
+        vector<int> temp; // Temporary storage kyunki bottom-up chahiye
+        Node* curr = root;
+        while (curr) {
+            if (!isLeaf(curr)) {
+                temp.push_back(curr->data);
+            }
+            // Right mein jao, agar right nahi toh left
+            if (curr->right) curr = curr->right;
+            else curr = curr->left;
         }
-        if (!root->left && !root->right) {
-            ans.push_back(root->data); // Add leaf node to the result
+        // Reverse order mein result mein add karo
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            result.push_back(temp[i]);
+        }
+    }
+    
+    // Leaves add karne ke liye
+    void addLeaves(Node* root, vector<int>& result) {
+        if (!root) return;
+        if (isLeaf(root)) {
+            result.push_back(root->data);
             return;
         }
-        traverseLeaf(root->left, ans); // Traverse left subtree
-        traverseLeaf(root->right, ans); // Traverse right subtree
+        addLeaves(root->left, result);
+        addLeaves(root->right, result);
     }
-
-    // Traverse the right boundary (excluding leaf nodes) in reverse order
-    void traverseRight(Node* root, vector<int>& ans) {
-        if (!root || (!root->left && !root->right)) {
-            return; // Stop at leaf nodes
-        }
-        if (root->right) {
-            traverseRight(root->right, ans); // Traverse right subtree
-        } else {
-            traverseRight(root->left, ans); // Traverse left subtree if right is null
-        }
-        ans.push_back(root->data);// Add current node to the result (reverse order)
-    }
-
-    vector<int> boundaryTraversal(Node* root) {
-        vector<int> ans;
-        if (!root) {
-            return ans; // Empty tree
-        }
-
-        // Step 1: Add the root node
-        ans.push_back(root->data);
-
-        // Step 2: Traverse the left boundary (excluding leaf nodes)
-        traverseLeft(root->left, ans);
-
-        // Step 3: Traverse all leaf nodes
-        traverseLeaf(root->left, ans); // Left subtree leaves
-        traverseLeaf(root->right, ans); // Right subtree leaves
-
-        // Step 4: Traverse the right boundary (excluding leaf nodes) in reverse order
-        traverseRight(root->right, ans);
-
-        return ans;
+    
+    // Check karo ki node leaf hai ya nahi
+    bool isLeaf(Node* node) {
+        return (node && !node->left && !node->right);
     }
 };
+
 
 //{ Driver Code Starts.
 
