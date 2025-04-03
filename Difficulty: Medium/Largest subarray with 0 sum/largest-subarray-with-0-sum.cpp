@@ -11,24 +11,25 @@ class Solution {
   public:
     int maxLen(vector<int>& arr) {
         // code here
-        int maxLen = 0;
-        int sum = 0;
-        unordered_map<int , int>map;
-        for( int i = 0 ; i<arr.size() ; i++){
-              sum = sum + arr[i];
+        unordered_map<int , int>mp;
+        int n = arr.size();
+        int maxlen = 0;
+        int maxsum  = 0;
+         mp[0] = -1 ;
+         
+         
+         for( int i = 0 ; i< n ; i++){
             
-            if(sum == 0){
-                maxLen = i+1;
-                
-            }
-            if( map.find(sum) != map.end()){
-                maxLen = max( maxLen , i-map[sum]);
-            }
-            else{
-                map[sum] =i;
-            }
-        }
-        return maxLen;
+             maxsum += arr[i];
+             
+             if( mp.find(maxsum) != mp.end()){
+                 maxlen = max( maxlen , i - mp[maxsum]);
+             }
+             else{
+             mp[maxsum] = i;
+             }
+         }
+         return maxlen;
     }
 };
 
