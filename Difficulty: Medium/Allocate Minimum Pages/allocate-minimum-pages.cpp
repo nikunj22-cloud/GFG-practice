@@ -7,36 +7,40 @@ using namespace std;
 
 // } Driver Code Ends
 
-
 class Solution {
-public:
-    bool isPossible(vector<int>& arr, int k, int mid) {
-        int student = 1, pageSum = 0;
-         
+  public:
+    bool ispossible(vector<int>& arr, int k, int mid) {
+        int studentCount = 1;
+        int pageSum = 0;
         for (int i = 0; i < arr.size(); i++) {
+            if (arr[i] > mid) return false; // single book has more pages than mid
+
             if (pageSum + arr[i] <= mid) {
                 pageSum += arr[i];
             } else {
-                student++;
-                if (student > k) return false;
-                pageSum = arr[i]; // Start new allocation
+                studentCount++;
+                pageSum = arr[i];
+                if (studentCount > k) return false;
             }
         }
         return true;
     }
 
     int findPages(vector<int> &arr, int k) {
-        if (k > arr.size()) return -1; // Not enough books for students
+        int n = arr.size();
+        if (k > n) return -1; // more students than books
 
-        int s = *max_element(arr.begin(), arr.end()); // Lower bound (largest book)because at least one book toh pdni pdegi
-        int e = accumulate(arr.begin(), arr.end(), 0); // Upper bound (sum of all pages)
-        int ans = -1;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += arr[i];
+        }
 
+        int s = 0, e = sum, ans = -1;
         while (s <= e) {
             int mid = s + (e - s) / 2;
-            if (isPossible(arr, k, mid)) {
+            if (ispossible(arr, k, mid)) {
                 ans = mid;
-                e = mid - 1; // Minimize maximum pages
+                e = mid - 1;
             } else {
                 s = mid + 1;
             }
@@ -44,6 +48,7 @@ public:
         return ans;
     }
 };
+
 
 
 //{ Driver Code Starts.
